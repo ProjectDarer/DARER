@@ -1,3 +1,5 @@
+// src/pages/PlayerSignupPage.jsx
+
 import React, { useState, useEffect } from 'react';
 import GamingHeader from '../components/GamingHeader';
 import { useLocation } from 'react-router-dom';
@@ -10,11 +12,8 @@ const PlayerSignupPage = () => {
   const [email, setEmail] = useState('');
   const location = useLocation(); // To track if we came from circle.html
 
-  // Mock showAlert for simplicity, replace with your custom hook
-  const showAlert = (title, message, type) => {
-    console.log(`[Alert - ${type}] ${title}: ${message}`);
-    alert(`${title}\n${message}`);
-  };
+  // 1. Replace mock showAlert with the custom hook
+  const { showCustomAlert, AlertComponent } = useCustomGamingAlert(); 
 
   // Replaces the setMainContentHeight logic from public/javascripts/player_signup.js
   useEffect(() => {
@@ -51,12 +50,14 @@ const PlayerSignupPage = () => {
     e.preventDefault();
 
     if (!email) {
-      showAlert('⚠️ Email Required', 'Please enter your email address to continue with player signup.', 'warning');
+      // 2. Use showCustomAlert (Warning)
+      showCustomAlert('⚠️ Email Required', 'Please enter your email address to continue with player signup.', 'warning');
       return;
     }
 
     if (!isValidEmail(email)) {
-      showAlert('❌ Invalid Email', 'Please enter a valid email address (e.g., user@example.com).', 'error');
+      // 2. Use showCustomAlert (Error)
+      showCustomAlert('❌ Invalid Email', 'Please enter a valid email address (e.g., user@example.com).', 'error');
       return;
     }
 
@@ -132,8 +133,10 @@ const PlayerSignupPage = () => {
       {/* Footer component reused from LandingPage (styles from player_signup.css) */}
       <footer className="gaming-footer">
         <div className="footer-container">
-          <div className="footer-section"><h3>DARER</h3><p>The World's First AI-Powered Live Dare Platform</p></div>
-          <div className="footer-section">
+<div className="footer-section">
+            <img src="/videos/logo.png" alt="" />
+            <p>The world’s first AI dare platform.</p>
+          </div>          <div className="footer-section">
             <h4>CONNECT WITH US</h4>
             <div className="social-links">
               <div className="social-link"><a href=""><img src="/videos/social.png" alt="Instagram" width="30" height="30" /></a></div>
@@ -144,6 +147,9 @@ const PlayerSignupPage = () => {
         </div>
         <div className="footer-bottom"><p>&copy; 2025 DARER. All rights reserved</p></div>
       </footer>
+      
+      {/* 3. Render the Custom Alert Modal */}
+      <AlertComponent />
     </>
   );
 };

@@ -1,3 +1,5 @@
+// src/pages/WatcherSignupPage.jsx
+
 import React, { useState, useEffect } from 'react';
 import GamingHeader from '../components/GamingHeader';
 import AudioPlayer from '../components/AudioPlayer';
@@ -7,12 +9,9 @@ import API_CONFIG from '../../config.js';
 
 const WatcherSignupPage = () => {
   const [email, setEmail] = useState('');
-  // Use the same mock showAlert or your custom hook here
-
-  const showAlert = (title, message, type) => {
-    console.log(`[Alert - ${type}] ${title}: ${message}`);
-    alert(`${title}\n${message}`);
-  };
+  
+  // Use the custom alert hook
+  const { showCustomAlert, AlertComponent } = useCustomGamingAlert(); 
 
   // Content height logic migrated from watcher_signup.js
   useEffect(() => {
@@ -45,12 +44,14 @@ const WatcherSignupPage = () => {
     e.preventDefault();
     
     if (!email) {
-      showAlert('⚠️ Email Required', 'Please enter your email address to continue with watcher signup.', 'warning');
+      // Use the custom alert with 'warning' type, and pass the exact title requested by the user
+      showCustomAlert('⚠️ Email Required', 'Please enter your email address to continue with watcher signup.', 'warning');
       return;
     }
     
     if (!isValidEmail(email)) {
-      showAlert('❌ Invalid Email', 'Please enter a valid email address (e.g., user@example.com).', 'error');
+      // Use the custom alert with 'error' type
+      showCustomAlert('❌ Invalid Email', 'Please enter a valid email address (e.g., user@example.com).', 'error');
       return;
     }
     
@@ -125,8 +126,10 @@ const WatcherSignupPage = () => {
       <footer className="gaming-footer">
         {/* Footer content structure reused */}
         <div className="footer-container">
-          <div className="footer-section"><h3>DARER</h3><p>The World's First AI-Powered Live Dare Platform</p></div>
-          <div className="footer-section">
+<div className="footer-section">
+            <img src="/videos/logo.png" alt="" />
+            <p>The world’s first AI dare platform.</p>
+          </div>          <div className="footer-section">
             <h4>CONNECT WITH US</h4>
             <div className="social-links">
               <div className="social-link"><a href=""><img src="/videos/social.png" alt="Instagram" width="30" height="30" /></a></div>
@@ -137,6 +140,9 @@ const WatcherSignupPage = () => {
         </div>
         <div className="footer-bottom"><p>&copy; 2025 DARER. All rights reserved</p></div>
       </footer>
+      
+      {/* Render the Custom Alert Modal */}
+      <AlertComponent />
     </>
   );
 };

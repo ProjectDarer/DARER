@@ -128,7 +128,7 @@ const LandingPage = () => {
         {/* Footer content from index.html (repeated structure) */}
         <div className="footer-container">
           <div className="footer-section">
-            <img src="./videos/logo.png" alt="" />
+            <img src="/videos/logo.png" alt="" />
             <p>The world’s first AI dare platform.</p>
           </div>
           

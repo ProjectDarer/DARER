@@ -1,19 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-// The Gaming Header styles are defined in index.css and player_signup.css.
-// We import global.css which should contain these styles.
 import '../styles/global.css'; 
 
-/**
- * Reusable header for landing and signup pages.
- */
+
 const GamingHeader = () => {
   return (
     <header className="gaming-header">
       <div className="header-container">
         <div className="logo-section">
-          <Link to="/" className="logo"><img src="./videos/logo.png" alt="" /></Link>
-          {/* <div className="logo-glow"></div> */}
+          <Link to="/" className="logo"><img src="/videos/logo.png" alt="DARER Logo" /></Link>
         </div>
 <div>
   <p className="claim-now">
@@ -34,9 +29,6 @@ const GamingHeader = () => {
   </p>
 </div>
 
-        {/* The original file had a nav with HOME/PLAYER/WATCHER nav-items, 
-            which is often removed in the final build or implemented via routing logic.
-        <nav className="gaming-nav">...</nav> */}
       </div>
     </header>
   );

@@ -144,8 +144,10 @@ const PlayerLoadingPage = () => {
       {/* Footer component reused from LandingPage (styles from circle.css) */}
       <footer className="gaming-footer">
         <div className="footer-container">
-          <div className="footer-section"><h3>DARER</h3><p>The World's First AI-Powered Live Dare Platform</p></div>
-          <div className="footer-section">
+<div className="footer-section">
+            <img src="/videos/logo.png" alt="" />
+            <p>The world’s first AI dare platform.</p>
+          </div>          <div className="footer-section">
             <h4>CONNECT WITH US</h4>
             <div className="social-links">
               <div className="social-link"><a href=""><img src="/videos/social.png" alt="Instagram" width="30" height="30" /></a></div>
