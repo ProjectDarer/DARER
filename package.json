@@ -3,13 +3,24 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
-  },
+"scripts": {
+  "server": "nodemon server.js",
+  "client": "vite",
+  "dev": "concurrently \"npm run server\" \"npm run client\"",
+  "build": "vite build",
+  "preview": "vite preview",
+  "lint": "eslint ."
+},
+
   "dependencies": {
+    "concurrently": "^9.2.1",
+    "cors": "^2.8.5",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.19.2",
+    "nodemon": "^3.1.10",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.9.4"

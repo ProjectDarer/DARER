@@ -3,6 +3,7 @@ import GamingHeader from '../components/GamingHeader';
 import { useLocation } from 'react-router-dom';
 import AudioPlayer from '../components/AudioPlayer';
 import '../styles/player_signup.css'; // Contains the styles for this page and footer structure
+import API_CONFIG from '../../config.js';
 // NOTE: You would reuse the useGamingAlert hook logic provided in LandingPage.jsx
 
 const PlayerSignupPage = () => {
@@ -59,25 +60,26 @@ const PlayerSignupPage = () => {
       return;
     }
 
-    // Simulate API call logic
     try {
-      // Replace with actual fetch call if backend is available
-      console.log('Simulating POST to /api/player_signup');
+      const res = await fetch(`${API_CONFIG.API_URL}/api/player_signup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email, user_type: 'player' })
+      });
 
-      // Mock API response logic from original JS
-      const mockResponse = { ok: true, json: async () => ({ exists: false, message: 'Success' }) };
-      const responseData = await mockResponse.json();
-
-      if (mockResponse.ok) {
-        if (responseData.exists) {
-          showAlert('🎮 Welcome Back!', 'You\'re already registered as a Player. Ready to start streaming and earning?', 'info');
-        } else {
-          showAlert('🎉 Signup Successful!', 'Welcome to Darer as a Player! You can now start streaming and getting dared by viewers.', 'success');
-        }
-      } else {
-        showAlert('❌ Signup Failed', 'Something went wrong during signup. Please check your connection and try again.', 'error');
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        showAlert('❌ Signup Failed', data?.message || 'Something went wrong during signup.', 'error');
+        return;
       }
-    } catch (error) {
+
+      if (data.exists) {
+        showAlert('🎮 Welcome Back!', 'You\'re already registered as a Player. Ready to start streaming and earning?', 'info');
+      } else {
+        showAlert('🎉 Signup Successful!', 'Welcome to Darer as a Player! You can now start streaming and getting dared by viewers.', 'success');
+      }
+    } catch (_err) {
       showAlert('🌐 Network Error', 'Unable to connect to the server. Please check your internet connection and try again.', 'error');
     }
 

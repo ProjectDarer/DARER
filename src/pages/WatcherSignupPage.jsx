@@ -3,6 +3,7 @@ import GamingHeader from '../components/GamingHeader';
 import AudioPlayer from '../components/AudioPlayer';
 import { Link } from 'react-router-dom';
 import '../styles/player_signup.css'; // Uses the same visual style as player signup
+import API_CONFIG from '../../config.js';
 
 const WatcherSignupPage = () => {
   const [email, setEmail] = useState('');
@@ -54,21 +55,27 @@ const WatcherSignupPage = () => {
     }
     
     try {
-        console.log('Simulating POST to /api/watcher_signup');
-        const mockResponse = { ok: true, json: async () => ({ exists: false, message: 'Success' }) }; 
-        const responseData = await mockResponse.json();
+      const res = await fetch("http://localhost:3000/api/watcher_signup", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        // credentials: 'include',
+        body: JSON.stringify({ email, user_type: 'watcher' })
+      });
 
-        if (mockResponse.ok) {
-            if (responseData.exists) {
-                showAlert('👁️ Welcome Back!', 'You\'re already registered as a Watcher. Ready to start daring players?', 'info');
-            } else {
-                showAlert('🎉 Signup Successful!', 'Welcome to Darer as a Watcher! You can now watch streams and dare players in real-time.', 'success');
-            }
-        } else {
-            showAlert('❌ Signup Failed', 'Something went wrong during signup.', 'error');
-        }
-    } catch (error) {
-        showAlert('🌐 Network Error', 'Unable to connect to the server.', 'error');
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        showAlert('❌ Signup Failed', data?.message || 'Something went wrong during signup.', 'error');
+        return;
+      }
+
+      if (data.exists) {
+        showAlert('👁️ Welcome Back!', 'You\'re already registered as a Watcher. Ready to start daring players?', 'info');
+      } else {
+        showAlert('🎉 Signup Successful!', 'Welcome to Darer as a Watcher! You can now watch streams and dare players in real-time.', 'success');
+      }
+    } catch (_err) {
+      showAlert('🌐 Network Error', 'Unable to connect to the server.', 'error');
+      console.log("the error is :" , _err);
     }
     
     setEmail('');
