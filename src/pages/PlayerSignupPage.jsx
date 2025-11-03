@@ -7,6 +7,7 @@ import AudioPlayer from '../components/AudioPlayer';
 import '../styles/player_signup.css'; // Contains the styles for this page and footer structure
 import API_CONFIG from '../../config.js';
 // NOTE: You would reuse the useGamingAlert hook logic provided in LandingPage.jsx
+import { useCustomGamingAlert } from '../components/CustomGamingAlert'; 
 
 const PlayerSignupPage = () => {
   const [email, setEmail] = useState('');
@@ -71,17 +72,17 @@ const PlayerSignupPage = () => {
 
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        showAlert('❌ Signup Failed', data?.message || 'Something went wrong during signup.', 'error');
+        showCustomAlert('❌ Signup Failed', data?.message || 'Something went wrong during signup.', 'error');
         return;
       }
 
       if (data.exists) {
-        showAlert('🎮 Welcome Back!', 'You\'re already registered as a Player. Ready to start streaming and earning?', 'info');
+        showCustomAlert('🎮 Welcome Back!', 'You\'re already registered as a Player. Ready to start streaming and earning?', 'info');
       } else {
-        showAlert('🎉 Signup Successful!', 'Welcome to Darer as a Player! You can now start streaming and getting dared by viewers.', 'success');
+        showCustomAlert('🎉 Signup Successful!', 'Welcome to Darer as a Player! You can now start streaming and getting dared by viewers.', 'success');
       }
     } catch (_err) {
-      showAlert('🌐 Network Error', 'Unable to connect to the server. Please check your internet connection and try again.', 'error');
+      showCustomAlert('🌐 Network Error', 'Unable to connect to the server. Please check your internet connection and try again.', 'error');
     }
 
     setEmail('');

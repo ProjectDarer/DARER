@@ -6,6 +6,7 @@ import AudioPlayer from '../components/AudioPlayer';
 import { Link } from 'react-router-dom';
 import '../styles/player_signup.css'; // Uses the same visual style as player signup
 import API_CONFIG from '../../config.js';
+import { useCustomGamingAlert } from '../components/CustomGamingAlert'; 
 
 const WatcherSignupPage = () => {
   const [email, setEmail] = useState('');
@@ -65,17 +66,17 @@ const WatcherSignupPage = () => {
 
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        showAlert('❌ Signup Failed', data?.message || 'Something went wrong during signup.', 'error');
+        showCustomAlert('❌ Signup Failed', data?.message || 'Something went wrong during signup.', 'error');
         return;
       }
 
       if (data.exists) {
-        showAlert('👁️ Welcome Back!', 'You\'re already registered as a Watcher. Ready to start daring players?', 'info');
+        showCustomAlert('👁️ Welcome Back!', 'You\'re already registered as a Watcher. Ready to start daring players?', 'info');
       } else {
-        showAlert('🎉 Signup Successful!', 'Welcome to Darer as a Watcher! You can now watch streams and dare players in real-time.', 'success');
+        showCustomAlert('🎉 Signup Successful!', 'Welcome to Darer as a Watcher! You can now watch streams and dare players in real-time.', 'success');
       }
     } catch (_err) {
-      showAlert('🌐 Network Error', 'Unable to connect to the server.', 'error');
+      showCustomAlert('🌐 Network Error', 'Unable to connect to the server.', 'error');
       console.log("the error is :" , _err);
     }
     
