@@ -117,7 +117,7 @@ const LandingPage = () => {
           <button className="watcher" onClick={handleWatcherClick}>WATCHER</button>
         </div>
 
-        <p className="coming-soon">Coming Soon</p>
+        <p className="coming-soon">Join the Waitlist <br />Be first to play & earn when Darer Launches</p>
         
         {/* Custom Gaming Alert Modal */}
         <GamingAlertModal />

@@ -222,7 +222,7 @@ body {
 
 
 .coming-soon {
-      margin-top: 30px;
+      margin-top: 11px;
   /* static game-themed styling */
   --cs-magenta: #ff00ff;
   --cs-cyan: #00fff7;
@@ -234,7 +234,7 @@ body {
   position: relative;
   display: inline-block;
   margin-bottom: 10px;
-  font-size: clamp(1.125rem, 4vw, 1.5625rem);
+  font-size: 95%;
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.125rem;
