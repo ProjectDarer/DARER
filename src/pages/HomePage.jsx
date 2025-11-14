@@ -46,7 +46,7 @@ const HomePage = () => {
   );
 
   return (
-    <>
+    <div className="home-wrapper">
       <header className="header">
         <h1 className="logo">DARER</h1>
         <div className="header-buttons">
@@ -88,7 +88,7 @@ const HomePage = () => {
       </section>
 
       <BottomBar />
-    </>
+    </div>
   );
 };
 

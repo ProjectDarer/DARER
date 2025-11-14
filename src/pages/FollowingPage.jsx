@@ -31,7 +31,7 @@ const OfflineStreamItem = ({ title }) => (
 
 const FollowingPage = () => {
   return (
-    <>
+    <div className="following-wrapper"> {/* WRAPPING CONTENT */}
       <header className="header">
         <h1 className="logo">DARER</h1>
         <div className="header-buttons">
@@ -46,7 +46,8 @@ const FollowingPage = () => {
       </nav>
 
       <section className="section-title yellow-text">Your Live Channels</section>
-      {[...Array(6)].map((_, i) => (
+    <div style={{display: 'flex', gap: '10px' ,  }}>
+        {[...Array(6)].map((_, i) => (
         <LiveStreamItem 
           key={i} 
           title="shanks_ttv" 
@@ -55,14 +56,16 @@ const FollowingPage = () => {
           lang="English" 
         />
       ))}
+    </div>
 
       <section className="section-title yellow-text">Offline Channels</section>
+       <div style={{display: 'flex', gap: '10px' ,  }}>
       {[...Array(5)].map((_, i) => (
         <OfflineStreamItem key={i} title="noobmaster_69" />
       ))}
-
+</div>
       <BottomBar />
-    </>
+    </div>
   );
 };
 

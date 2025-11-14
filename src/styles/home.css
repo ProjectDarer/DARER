@@ -9,66 +9,82 @@ body {
   background-color: #000;
   color: #fff;
   font-family: 'Segoe UI', sans-serif;
-  padding: 10px;
+  padding: 0;
 }
 
-/* Header */
+/* NEW: Full-width wrapper for the entire page content */
+.home-wrapper {
+    width: 100%;
+    margin: 0;
+    padding-bottom: 70px; /* Space for BottomBar */
+}
+
+/* Header - Modernized for Home/Following */
 .header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 10px 15px;
+  background: rgba(0, 0, 0, 0.9);
+  border-bottom: 2px solid rgba(0, 255, 247, 0.2);
 }
 
 .logo {
-  margin: 10px;
   font-size: 26px;
   color: #00fff7;
-/**  text-shadow: 0 0 5px #00fff7, 0 0 10px #00fff7;**/
 }
 .logo img {
-    padding: 0px;
-      height: 44px;
+    height: 44px;
     width: 52px;
 }
 .header-buttons .btn {
   border: 2px solid;
   background: transparent;
-  padding: 6px 12px;
+  padding: 8px 14px;
   font-size: 14px;
-  border-radius: 8px;
-  margin-left: 10px;
+  border-radius: 12px;
+  margin-left: 8px;
   cursor: pointer;
-/**  text-shadow: 0 0 5px currentColor;
-  box-shadow: 0 0 5px currentColor;**/
-  transition: 0.3s;
+  font-weight: bold;
+  letter-spacing: 1px;
+  transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .header-buttons .btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 15px currentColor;
+  transform: translateY(-2px);
 }
 
 .btn.yellow {
   border-color: #fffc00;
   color: #fffc00;
+  box-shadow: 0 0 10px rgba(255, 252, 0, 0.4);
+}
+.btn.yellow:hover {
+    box-shadow: 0 0 20px #fffc00, 0 0 5px #fffc00 inset;
 }
 
-.btn.green {
-  border-color: #00fff7;
-  color: #00fff7;
+.btn.pink-text {
+    border-color: #ff00ff;
+    color: #ff00ff;
+    box-shadow: 0 0 10px rgba(255, 0, 255, 0.4);
+    text-shadow: 0 0 5px #ff00ff;
+}
+.btn.pink-text:hover {
+    box-shadow: 0 0 20px #ff00ff, 0 0 5px #ff00ff inset;
 }
 
-.btn.pink {
-  border-color: #ff00ff;
-  color: #ff00ff;
-}
-
-/* Tabs */
+/* Tabs - Unified Look */
 .tabs {
   display: flex;
-  margin-top: 15px;
-  border-bottom: 1px solid #222;
-  text-decoration: none;
+  margin-top: 0;
+  border-bottom: 2px solid #1a1a1a;
+  background: #000;
+  position: sticky;
+  top: 64px; /* Adjust based on header height */
+  z-index: 40;
 }
 
 .tabs a {
@@ -78,105 +94,149 @@ body {
 .tab {
   flex: 1;
   text-align: center;
-  padding: 10px;
+  padding: 12px 10px;
   font-weight: bold;
-  color: #999;
+  color: #888;
+  font-size: 16px;
   cursor: pointer;
+  transition: all 0.3s;
+}
+
+.tab:hover {
+    color: #fffc00;
 }
 
 .tab.active {
-  color: #ff00ff;
-  border-bottom: 2px solid #ff00ff;
+  color: #00fff7;
+  border-bottom: 3px solid #00fff7;
+  text-shadow: 0 0 8px rgba(0, 255, 247, 0.7);
 }
 
 /* Live Section */
 .section-title {
-  margin: 20px 0 10px;
-  font-size: 18px;
+  margin: 25px 0 15px;
+  font-size: 22px;
+  padding: 0 15px; 
+  font-weight: 900;
+  letter-spacing: 1px;
 }
 
 .yellow-text {
   color: #fffc00;
+  text-shadow: 0 0 8px #fffc00;
 }
 
 .pink-text {
   color: #ff00ff;
+  text-shadow: 0 0 8px #ff00ff;
 }
 
 .green-text {
- /** color: #00ff00;**/
  color: #00fff7;
+ text-shadow: 0 0 8px #00fff7;
 }
 
 .streams {
   display: flex;
-  gap: 15px;
+  gap: 20px;
   overflow-x: scroll;
-  padding-bottom: 10px;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 15px 20px;
+}
+.streams::-webkit-scrollbar {
+    height: 6px;
+}
+.streams::-webkit-scrollbar-thumb {
+    background: #ff00ff;
+    border-radius: 3px;
 }
 
 .stream-card {
   position: relative;
-  width: 250px;
+  width: 280px; /* Wider card */
   flex-shrink: 0;
+  background: #111; 
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #222;
+  box-shadow: 0 0 10px rgba(255, 0, 255, 0.1);
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.stream-card:hover {
+    border-color: #ff00ff;
+    box-shadow: 0 0 20px rgba(255, 0, 255, 0.4);
+    transform: translateY(-4px);
 }
 
 .stream-card img {
   width: 100%;
-  border-radius: 10px;
+  height: auto;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  border-radius: 10px 10px 0 0;
 }
 
-.stream-card img:hover {
-/**  box-shadow: 0 0 10px #ff00ff, 0 0 20px #00ff00;**/
-  transform-origin: 0.3s;
-}
-
-.stream-title {
-  font-size: 14px;
-  text-shadow: 0 0 5px #00fff7;
-}
 .live-tag {
   position: absolute;
   top: 10px;
   left: 10px;
-  background: red;
+  background: #ff00ff; /* Magenta Live Tag */
   color: white;
-  padding: 2px 5px;
-  font-size: 12px;
-  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 13px;
+  border-radius: 6px;
+  font-weight: bold;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 0 10px rgba(255, 0, 255, 0.7);
 }
 
 .viewer-count {
   position: absolute;
-  bottom: 90px;
-  left: 10px;
+ bottom: 20px;
+
   background: rgba(0,0,0,0.7);
-  padding: 2px 6px;
-  font-size: 12px;
-  border-radius: 4px;
+  color: #00fff7; /* Cyan viewer count */
+  padding: 4px 8px;
+  font-size: 13px;
+  border-radius: 6px;
+  font-weight: bold;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(0, 255, 247, 0.3);
 }
 
 .stream-info {
-  margin-top: 6px;
+  padding: 12px 15px; 
+  text-align: left;
 }
 
 .stream-title {
-  font-size: 14px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #00fff7;
+  text-shadow: 0 0 5px rgba(0, 255, 247, 0.5);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .streamer, .game-title {
-  font-size: 12px;
-  color: #ccc;
+  font-size: 14px;
+  color: #bbb;
+  margin-top: 2px;
 }
 
 .yellow-tag {
-  background: #ffff00;
+  background: #fffc00;
   color: #000;
-  font-size: 10px;
-  padding: 2px 5px;
-  border-radius: 4px;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 6px;
   display: inline-block;
-  margin-top: 4px;
+  margin-top: 8px;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
 /* Categories */
@@ -188,59 +248,83 @@ body {
   display: flex;
   gap: 15px;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 15px 30px;
 }
 
 .category {
   text-align: center;
   font-size: 12px;
+  padding: 10px;
+  background: #111;
+  border-radius: 10px;
+  border: 1px solid #222;
+  transition: all 0.3s;
+  flex-shrink: 0;
+  cursor: pointer;
+  width: 120px; /* Fixed width for better look */
+}
+
+.category:hover {
+    border-color: #fffc00;
+    box-shadow: 0 0 15px rgba(255, 252, 0, 0.6);
+    transform: scale(1.05);
 }
 
 .category img {
-  width: 80px;
-  height: 80px;
-  border-radius: 10px;
-  margin-bottom: 4px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%; /* Circle images for categories */
+  object-fit: cover;
+  margin-bottom: 8px;
+  border: 3px solid #ff00ff; /* Pink border */
+  box-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
 }
 
+.category p {
+  color: #00fff7;
+  margin-top: 5px;
+  font-size: 14px;
+  font-weight: bold;
+}
 .category span {
-  color: #ccc;
-  font-size: 11px;
-}
-/** bottom bar **/ 
-.bottombar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #111;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 10px 0;
-  border-top: 1px solid #222;
-  box-sizing: border-box;
+  color: #aaa;
+  font-size: 12px;
 }
 
-.bottombar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: #111;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 10px 0;
-    border-top: 1px solid #222;
-    box-sizing: border-box;
-}
-
-.bottombar i {
-    padding-left: 12px;
-}
-
-.bottombar a {
-    text-decoration: none;
-    color: #fff;
-    font-size: 13.3333px;
+/* Responsive adjustments (keeping original media queries as a guide) */
+@media (max-width: 600px) {
+  .header {
+    padding: 8px 10px;
+  }
+  .header-buttons .btn {
+    padding: 6px 10px;
+    font-size: 12px;
+    border-radius: 8px;
+  }
+  .section-title {
+    font-size: 20px;
+    padding: 0 10px;
+    margin: 20px 0 10px;
+  }
+  .streams {
+    gap: 15px;
+    padding: 0 10px 15px;
+  }
+  .stream-card {
+    width: 200px;
+  }
+  .stream-title {
+    font-size: 16px;
+  }
+  .streamer, .game-title {
+    font-size: 12px;
+  }
+  .category {
+    width: 100px;
+  }
+  .category img {
+    width: 70px;
+    height: 70px;
+  }
 }
