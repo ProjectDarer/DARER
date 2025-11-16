@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import BottomBar from '../components/BottomBar';
 import '../styles/whispers.css';
 
@@ -7,6 +7,8 @@ const initialChats = [
   { user: 'ShadowDragon', message: 'Hey! Are you live now? ', time: '2m ago', avatar: 'avatar1.png' },
   { user: 'PixelVibe', message: 'Let’s stream tonight 👾', time: '2m ago', avatar: 'avatar2.png' },
   { user: 'LunaCraft', message: 'You missed the raid 😭', time: '2m ago', avatar: 'avatar3.png' },
+  { user: 'CyberNinja', message: 'Raid at 10 EST?', time: '1h ago', avatar: 'avatar4.png' },
+  { user: 'DareBot', message: 'Your dare has been completed!', time: '5h ago', avatar: 'avatar5.png' },
 ];
 
 const ChatItem = ({ user, message, time, avatar }) => {
@@ -16,43 +18,73 @@ const ChatItem = ({ user, message, time, avatar }) => {
 
   return (
     <div className="chat-item" onClick={handleChatClick}>
-      <img src={avatar} alt="User" className="avatar" />
+      {/* Assuming avatars are in public folder or fetched dynamically */}
+      <img src={avatar} alt="User" className="avatar" /> 
       <div className="chat-info">
         <h4>@{user}</h4>
         <p>{message}</p>
-        <span className="chat-time">{time}</span>
       </div>
+      <span className="chat-time">{time}</span>
     </div>
   );
 };
 
 const WhispersPage = () => {
-  const [activeTab, setActiveTab] = useState('whispers');
+  const [searchText, setSearchText] = useState('');
+  const [filteredChats, setFilteredChats] = useState(initialChats);
+  
+  // NavLink active class helper
+  const isTabActive = ({ isActive }) => isActive ? 'tab active' : 'tab';
+
+  // Live search functionality
+  useEffect(() => {
+    const lowerCaseSearch = searchText.toLowerCase();
+    const filtered = initialChats.filter(chat =>
+      chat.user.toLowerCase().includes(lowerCaseSearch) ||
+      chat.message.toLowerCase().includes(lowerCaseSearch)
+    );
+    setFilteredChats(filtered);
+  }, [searchText]);
+
 
   return (
     <div className="whispers-page">
       <h4 className="page-title">Activity</h4>
+      
       <div className="header-buttons">
-        <Link 
+        <NavLink 
           to="/activity" 
-          className={`tab ${activeTab === 'notifications' ? 'active' : ''}`}
-          onClick={() => setActiveTab('notifications')}
+          className={isTabActive}
         >
           Notifications
-        </Link>
-        <Link 
+        </NavLink>
+        <NavLink 
           to="/whispers" 
-          className={`tab ${activeTab === 'whispers' ? 'active' : ''}`}
-          onClick={() => setActiveTab('whispers')}
+          className={isTabActive}
         >
           Whispers
-        </Link>
+        </NavLink>
+      </div>
+      
+      {/* NEW Search Input Section */}
+      <div className="whispers-header">
+        <input 
+          type="text" 
+          className="search-input" 
+          placeholder="Search whispers..." 
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+        />
       </div>
 
       <section className="chat-list">
-        {initialChats.map((chat, index) => (
-          <ChatItem key={index} {...chat} />
-        ))}
+        {filteredChats.length > 0 ? (
+            filteredChats.map((chat, index) => (
+                <ChatItem key={index} {...chat} />
+            ))
+        ) : (
+            <p style={{ textAlign: 'center', color: '#fffc00', marginTop: '30px' }}>No whispers found for "{searchText}"</p>
+        )}
       </section>
       
       <BottomBar />

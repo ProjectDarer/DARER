@@ -15,7 +15,7 @@ body {
     padding-top: 18px;
 }
 .profile-page {
-    max-width: 420px;
+    width: 100vw;
     margin: auto;
     padding-bottom: 50px;
 }
