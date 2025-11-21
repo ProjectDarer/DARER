@@ -1,45 +1,58 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import AppLayout from './components/AppLayout';
+
+// Core Pages (Keep)
 import LandingPage from './pages/LandingPage';
-import ProfilePage from './pages/ProfilePage';
+import LoginPage from './pages/LoginPage';
+import SignUpPage from './pages/SignUpPage';
 import ErrorPage from './pages/ErrorPage';
+
+// NEW Dashboard Pages
+import DashboardPage from './pages/DashboardPage'; // Renamed from NewDashboardPage
+import DaresPage from './pages/DaresPage';
+import StreamPage from './pages/StreamPage';
+import SettingPage from './pages/SettingPage';
+import OnboardingPage from './pages/OnboardingPage';
+
+// STUBS (To prevent import errors in any remaining files that might reference them)
 import PlayerLoadingPage from './pages/PlayerLoadingPage';
 import PlayerSignupPage from './pages/PlayerSignupPage';
 import WatcherSignupPage from './pages/WatcherSignupPage';
-import ActivityPage from './pages/ActivityPage';
-import WhispersPage from './pages/WhispersPage';
-import LiveChannelPage from './pages/LiveChannelPage';
-import HomePage from './pages/HomePage';
-import FollowingPage from './pages/FollowingPage';
-import LoginPage from './pages/LoginPage';
-import SignUpPage from './pages/SignUpPage';
 
-// You will likely have more global CSS, you can import it here
-// import './styles/layout.css'; 
-// import './styles/index.css'; 
 
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/activity" element={<ActivityPage />} />
-        <Route path="/whispers" element={<WhispersPage />} />
-        <Route path="/live_channel" element={<LiveChannelPage />} />
-        <Route path="/following" element={<FollowingPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignUpPage />} />
-        {/* Player Flow */}
-        <Route path="/html/circle.html" element={<PlayerLoadingPage />} />
-        <Route path="/html/player_signup.html" element={<PlayerSignupPage />} />
-        {/* Watcher Flow */}
-        <Route path="/html/watcher_signup.html" element={<WatcherSignupPage />} />
-        {/* Error */}
-        <Route path="/error" element={<ErrorPage />} />
-        {/* Fallback route */}
-        <Route path="*" element={<ErrorPage />} /> 
-      </Routes>
+      <AppLayout>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          
+          {/* AUTH PAGES (KEEP) */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+          
+          {/* NEW APPLICATION FLOW */}
+          <Route path="/onboarding" element={<OnboardingPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/dares" element={<DaresPage />} />
+          <Route path="/stream" element={<StreamPage />} />
+          <Route path="/Setting" element={<SettingPage />} />
+
+          {/* Legacy Redirects/Stubs */}
+          <Route path="/home" element={<DashboardPage />} /> 
+          {/* We are removing the old dashboard routes, the stubs were created in the previous step but won't be explicitly routed here to keep the structure clean */}
+          <Route path="/profile" element={<SettingPage />} />
+
+          {/* Player/Watcher Flow Stubs */}
+          <Route path="/html/circle.html" element={<PlayerLoadingPage />} />
+          <Route path="/html/player_signup.html" element={<PlayerSignupPage />} />
+          <Route path="/html/watcher_signup.html" element={<WatcherSignupPage />} />
+
+          {/* System Routes */}
+          <Route path="/error" element={<ErrorPage />} />
+          <Route path="*" element={<ErrorPage />} /> 
+        </Routes>
+      </AppLayout>
     </Router>
   );
 }

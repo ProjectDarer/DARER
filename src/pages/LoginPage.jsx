@@ -1,5 +1,4 @@
-// src/components/LoginPage.jsx
-
+// src/pages/LoginPage.jsx
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/login.css';
@@ -37,9 +36,9 @@ const LoginPage = () => {
       const isSuccess = username === 'test' && password === 'password';
 
       if (isSuccess) {
-          alert("Login successful!");
+          alert("Login successful! Redirecting to onboarding.");
           // In a real app, you would save an authentication token here
-          navigate("/home"); // Redirect on success
+          navigate("/onboarding"); // UPDATED: Redirect to new onboarding flow
       } else {
           alert("Login failed! Invalid credentials.");
       }

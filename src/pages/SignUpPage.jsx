@@ -1,4 +1,4 @@
-
+// src/pages/SignUpPage.jsx
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/signup.css';
@@ -54,8 +54,8 @@ const SignUpPage = () => {
         if (isExists) {
             alert("User already exists!");
         } else {
-            alert("Signup successful!");
-            navigate("/home"); 
+            alert("Signup successful! Redirecting to onboarding.");
+            navigate("/onboarding"); // UPDATED: Redirect to new onboarding flow
         }
     } catch (err) {
         alert("Error connecting to server.");

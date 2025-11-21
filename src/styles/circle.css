@@ -89,7 +89,9 @@ body {
   position: relative;
 }
 
-.logo {
+.logo img {
+      height: 44px;
+    width: 52px;
   font-size: 32px;
   color: #00fff7;
   text-shadow: 0 0 20px #00fff7;
