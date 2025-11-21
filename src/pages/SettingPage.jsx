@@ -1,128 +1,219 @@
-import React from 'react';
-import AppLayout from '../components/AppLayout';
+// src/pages/SettingPage.jsx
+import React, { useState } from 'react'; // ADDED React and useState
 
-// Shared styles/colors imported from AppLayout for consistency
-const N = {
-  CYAN: '#00fff7',
-  MAGENTA: '#ff00ff',
-  YELLOW: '#fffc00',
-  CARD_BG: '#1a1a1a',
-  TEXT_LIGHT: '#e5e7eb',
-  TEXT_SECONDARY: '#9ca3af',
-  BORDER_DARK: '#4b5563',
+// FIX: Define COLORS object to prevent ReferenceError
+const COLORS = {
+  neonCyan: '#00fff7',
+  neonMagenta: '#ff00ff',
+  neonYellow: '#fffc00',
+  neonPurple: '#b800ff',
+  darkBg: '#0a0a0a',
+  cardBg: 'rgba(26, 26, 26, 0.8)',
+  glowCyan: 'rgba(0, 255, 247, 0.3)',
+  glowMagenta: 'rgba(255, 0, 255, 0.3)',
+  glowYellow: 'rgba(255, 252, 0, 0.3)',
 };
 
-// --- Define helper functions first to avoid ReferenceError ---
-const glowText = (color, intensity = 5) => ({
-  color: color,
-  textShadow: `0 0 ${intensity}px ${color}80`,
-  transition: 'all 0.2s',
-});
+const SettingPage = () => {
+  const [settings, setSettings] = useState({
+    notifications: true,
+    autoAcceptDares: false,
+    privateProfile: false,
+  });
 
-const glowBorder = (color) => ({
-  border: `1px solid ${color}80`,
-  boxShadow: `0 0 10px ${color}50`,
-  transition: 'all 0.2s',
-});
-
-const S = {
-  glowText: glowText, // Expose helpers on S for consistency
-  glowBorder: glowBorder,
-  baseCard: {
-    backgroundColor: N.CARD_BG,
-    borderRadius: '0.75rem',
-    padding: '1.5rem',
-    marginBottom: '1.5rem',
-    ...glowBorder(N.BORDER_DARK), // FIX: Use the standalone helper
-  },
-  // --- FIX: Add the missing baseButton style function ---
-  baseButton: (isActive = false, color = N.CYAN) => ({
-    backgroundColor: isActive ? color + '20' : N.CARD_BG,
-    color: isActive ? color : N.TEXT_LIGHT,
-    padding: '0.6rem 1rem',
-    borderRadius: '0.5rem',
-    fontWeight: 'bold',
-    textDecoration: 'none',
-    transition: 'all 0.2s',
-    cursor: 'pointer',
-    ...glowBorder(isActive ? color : N.BORDER_DARK),
-    ...glowText(isActive ? color : N.TEXT_LIGHT, isActive ? 10 : 0),
-  }),
-};
-
-const SettingsPage = () => {
-  const settingItemStyle = {
-    padding: '1rem 0',
-    borderBottom: `1px solid ${N.BORDER_DARK}40`,
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    cursor: 'pointer',
-  };
-  
-  const linkStyle = {
-    color: N.CYAN,
-    textDecoration: 'none',
-    ...S.glowText(N.CYAN, 3),
-  };
+  const SettingToggle = ({ label, desc, value, onChange, color }) => (
+    <div style={{
+      background: 'rgba(26, 26, 26, 0.9)', borderRadius: '12px', padding: '1.5rem',
+      border: '1px solid rgba(255, 255, 255, 0.1)',
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+      marginBottom: '1rem',
+    }}>
+      <div>
+        <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'white', marginBottom: '0.5rem' }}>
+          {label}
+        </div>
+        <div style={{ color: '#999', fontSize: '0.9rem' }}>{desc}</div>
+      </div>
+      <div onClick={onChange} style={{
+        width: '60px', height: '30px', borderRadius: '15px',
+        background: value ? `linear-gradient(135deg, ${color} 0%, ${color}80 100%)` : '#333',
+        position: 'relative', cursor: 'pointer', transition: 'all 0.3s',
+        boxShadow: value ? `0 0 20px ${color}60` : 'none',
+      }}>
+        <div style={{
+          width: '24px', height: '24px', borderRadius: '50%',
+          background: 'white', position: 'absolute', top: '3px',
+          left: value ? '33px' : '3px', transition: 'all 0.3s',
+        }} />
+      </div>
+    </div>
+  );
 
   return (
-    <AppLayout>
-      <h1 style={{ fontSize: '2.5rem', fontWeight: 'extrabold', marginBottom: '2rem', textAlign: 'center', ...S.glowText(N.YELLOW, 12) }}>
-        User Settings
-      </h1>
-
-      <div style={S.baseCard}>
-        <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', ...S.glowText(N.MAGENTA, 8) }}>Account</h2>
-        
-        <div style={settingItemStyle} onClick={() => alert('Editing Profile Info...')}>
-          <p>Edit Profile Information</p>
-          <span style={linkStyle}>Manage</span>
-        </div>
-        
-        <div style={settingItemStyle} onClick={() => alert('Changing Password...')}>
-          <p>Change Password</p>
-          <span style={linkStyle}>Manage</span>
-        </div>
-        
-        <div style={{...settingItemStyle, borderBottom: 'none'}} onClick={() => alert('Viewing Privacy Settings...')}>
-          <p>Privacy Settings</p>
-          <span style={linkStyle}>View</span>
-        </div>
+    <>
+      <div style={{ marginBottom: '3rem', textAlign: 'center'  , 
+        marginTop: '45px' }}>
+        <h1 style={{
+          fontSize: '3.5rem', fontWeight: 900,
+          background: `linear-gradient(135deg, ${COLORS.neonCyan} 0%, ${COLORS.neonPurple} 100%)`,
+          WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+          marginBottom: '1rem',
+        }}>⚙️ SETTINGS</h1>
       </div>
 
-      <div style={S.baseCard}>
-        <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', ...S.glowText(N.MAGENTA, 8) }}>Security</h2>
+      {/* Profile Section */}
+      <div style={{
+        background: `linear-gradient(135deg, ${COLORS.neonMagenta}10 0%, rgba(26, 26, 26, 0.9) 100%)`,
+        borderRadius: '16px', padding: '2rem', marginBottom: '3rem',
+        border: `2px solid ${COLORS.neonMagenta}40`,
+      }}>
+        <h2 style={{
+          fontSize: '1.8rem', fontWeight: 'bold', color: COLORS.neonMagenta,
+          marginBottom: '2rem', textShadow: `0 0 20px ${COLORS.neonMagenta}`,
+        }}>Profile Settings</h2>
         
-        <div style={settingItemStyle} onClick={() => alert('Enabling Two-Factor Authentication...')}>
-          <p>Two-Factor Authentication</p>
-          <span style={{ color: N.YELLOW, fontWeight: 'bold' }}>Disabled</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', marginBottom: '2rem' }}>
+          <div style={{
+            width: '100px', height: '100px', borderRadius: '50%',
+            background: `linear-gradient(135deg, ${COLORS.neonYellow} 0%, ${COLORS.neonMagenta} 100%)`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: '3rem', fontWeight: 'bold',
+            boxShadow: `0 0 30px ${COLORS.neonYellow}60`,
+            cursor: 'pointer',
+          }}>P</div>
+          <div style={{ flex: 1 }}>
+            <input type="text" placeholder="Username" defaultValue="Player_X" style={{
+              width: '100%', padding: '1rem', marginBottom: '1rem',
+              background: 'rgba(0, 0, 0, 0.5)',
+              border: `2px solid ${COLORS.neonCyan}40`,
+              borderRadius: '8px', color: 'white', fontSize: '1.1rem',
+              outline: 'none',
+            }} />
+            <textarea placeholder="Bio" defaultValue="Professional dare taker and streamer. Let's make it epic! 🎮" style={{
+              width: '100%', padding: '1rem',
+              background: 'rgba(0, 0, 0, 0.5)',
+              border: `2px solid ${COLORS.neonCyan}40`,
+              borderRadius: '8px', color: 'white', fontSize: '1rem',
+              outline: 'none', minHeight: '100px', resize: 'vertical',
+            }} />
+          </div>
         </div>
-        
-        <div style={{...settingItemStyle, borderBottom: 'none'}} onClick={() => alert('Viewing Connected Apps...')}>
-          <p>Connected Applications</p>
-          <span style={linkStyle}>View (3)</span>
+
+        <button style={{
+          padding: '1rem 2rem',
+          background: `linear-gradient(135deg, ${COLORS.neonMagenta}30 0%, transparent 100%)`,
+          border: `2px solid ${COLORS.neonMagenta}`, borderRadius: '12px',
+          color: COLORS.neonMagenta, fontWeight: 'bold', cursor: 'pointer',
+          fontSize: '1rem', transition: 'all 0.3s',
+        }}>💾 SAVE CHANGES</button>
+      </div>
+
+      {/* Preferences Section */}
+      <div style={{
+        background: `linear-gradient(135deg, ${COLORS.neonCyan}10 0%, rgba(26, 26, 26, 0.9) 100%)`,
+        borderRadius: '16px', padding: '2rem', marginBottom: '3rem',
+        border: `2px solid ${COLORS.neonCyan}40`,
+      }}>
+        <h2 style={{
+          fontSize: '1.8rem', fontWeight: 'bold', color: COLORS.neonCyan,
+          marginBottom: '2rem', textShadow: `0 0 20px ${COLORS.neonCyan}`,
+        }}>Preferences</h2>
+
+        <SettingToggle
+          label="Notifications"
+          desc="Receive notifications for new dares and messages"
+          value={settings.notifications}
+          onChange={() => setSettings({...settings, notifications: !settings.notifications})}
+          color={COLORS.neonCyan}
+        />
+
+        <SettingToggle
+          label="Auto-Accept Dares"
+          desc="Automatically accept dares within your price range"
+          value={settings.autoAcceptDares}
+          onChange={() => setSettings({...settings, autoAcceptDares: !settings.autoAcceptDares})}
+          color={COLORS.neonMagenta}
+        />
+
+        <SettingToggle
+          label="Private Profile"
+          desc="Only show your profile to followers"
+          value={settings.privateProfile}
+          onChange={() => setSettings({...settings, privateProfile: !settings.privateProfile})}
+          color={COLORS.neonYellow}
+        />
+      </div>
+
+      {/* Payment Methods */}
+      <div style={{
+        background: `linear-gradient(135deg, ${COLORS.neonYellow}10 0%, rgba(26, 26, 26, 0.9) 100%)`,
+        borderRadius: '16px', padding: '2rem', marginBottom: '3rem',
+        border: `2px solid ${COLORS.neonYellow}40`,
+      }}>
+        <h2 style={{
+          fontSize: '1.8rem', fontWeight: 'bold', color: COLORS.neonYellow,
+          marginBottom: '2rem', textShadow: `0 0 20px ${COLORS.neonYellow}`,
+        }}>Payment Methods</h2>
+
+        <div style={{
+          background: 'rgba(26, 26, 26, 0.9)', borderRadius: '12px',
+          padding: '1.5rem', border: '1px solid rgba(255, 255, 255, 0.1)',
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          marginBottom: '1rem',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div style={{ fontSize: '2rem' }}>💳</div>
+            <div>
+              <div style={{ color: 'white', fontWeight: 'bold', marginBottom: '0.25rem' }}>
+                PayPal
+              </div>
+              <div style={{ color: '#999', fontSize: '0.9rem' }}>player_x@email.com</div>
+            </div>
+          </div>
+          <button style={{
+            padding: '0.5rem 1rem', background: 'transparent',
+            border: `1px solid ${COLORS.neonYellow}`, borderRadius: '8px',
+            color: COLORS.neonYellow, cursor: 'pointer', fontSize: '0.9rem',
+          }}>Edit</button>
+        </div>
+
+        <button style={{
+          padding: '1rem 2rem',
+          background: `linear-gradient(135deg, ${COLORS.neonYellow}30 0%, transparent 100%)`,
+          border: `2px solid ${COLORS.neonYellow}`, borderRadius: '12px',
+          color: COLORS.neonYellow, fontWeight: 'bold', cursor: 'pointer',
+          fontSize: '1rem', transition: 'all 0.3s',
+        }}>➕ ADD PAYMENT METHOD</button>
+      </div>
+
+      {/* Danger Zone */}
+      <div style={{
+        background: 'rgba(255, 0, 0, 0.05)', borderRadius: '16px', padding: '2rem',
+        border: '2px solid rgba(255, 0, 0, 0.3)',
+      }}>
+        <h2 style={{
+          fontSize: '1.8rem', fontWeight: 'bold', color: '#ff4444',
+          marginBottom: '1rem',
+        }}>Danger Zone</h2>
+        <p style={{ color: '#999', marginBottom: '1.5rem' }}>
+          These actions are permanent and cannot be undone.
+        </p>
+        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+          <button style={{
+            padding: '1rem 2rem', background: 'rgba(255, 0, 0, 0.1)',
+            border: '2px solid #ff4444', borderRadius: '12px',
+            color: '#ff4444', fontWeight: 'bold', cursor: 'pointer',
+            fontSize: '1rem', transition: 'all 0.3s',
+          }}>🔒 DEACTIVATE ACCOUNT</button>
+          <button style={{
+            padding: '1rem 2rem', background: 'rgba(255, 0, 0, 0.1)',
+            border: '2px solid #ff4444', borderRadius: '12px',
+            color: '#ff4444', fontWeight: 'bold', cursor: 'pointer',
+            fontSize: '1rem', transition: 'all 0.3s',
+          }}>🗑️ DELETE ACCOUNT</button>
         </div>
       </div>
-      
-      <div style={{ textAlign: 'center', marginTop: '3rem' }}>
-        <a 
-          href="#" 
-          style={{ 
-            ...S.baseButton(false, N.MAGENTA), 
-            ...S.glowText(N.MAGENTA, 8), 
-            ...S.glowBorder(N.MAGENTA),
-            backgroundColor: `${N.MAGENTA}10`,
-            padding: '1rem 2rem',
-            fontSize: '1.1rem'
-          }}
-          onClick={(e) => { e.preventDefault(); alert("Logging out and returning to Landing Page."); window.location.href = '/'; }}
-        >
-          Sign Out
-        </a>
-      </div>
-    </AppLayout>
+    </>
   );
 };
-
-export default SettingsPage;
+export default SettingPage

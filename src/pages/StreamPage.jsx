@@ -1,195 +1,198 @@
 // src/pages/StreamPage.jsx
-import React from 'react';
-import AppLayout from '../components/AppLayout';
+"use client"
 
-// Shared styles/colors imported from AppLayout for consistency
-const N = {
-  CYAN: '#00fff7',
-  MAGENTA: '#ff00ff',
-  YELLOW: '#fffc00',
-  CARD_BG: '#1a1a1a',
-  TEXT_LIGHT: '#e5e7eb',
-  TEXT_SECONDARY: '#9ca3af',
-  BORDER_DARK: '#4b5563',
-  DARK_BG: '#0a0a0a',
+import React , {useState} from "react";
+// FIX: Define COLORS object to prevent ReferenceError
+const COLORS = {
+  neonCyan: '#00fff7',
+  neonMagenta: '#ff00ff',
+  neonYellow: '#fffc00',
+  neonPurple: '#b800ff',
+  darkBg: '#0a0a0a',
+  cardBg: 'rgba(26, 26, 26, 0.8)',
+  glowCyan: 'rgba(0, 255, 247, 0.3)',
+  glowMagenta: 'rgba(255, 0, 255, 0.3)',
+  glowYellow: 'rgba(255, 252, 0, 0.3)',
 };
 
-const glowText = (color, intensity = 5) => ({
-  color: color,
-  textShadow: `0 0 ${intensity}px ${color}80`,
-  transition: 'all 0.2s',
-});
-
-const glowBorder = (color) => ({
-  border: `1px solid ${color}80`,
-  boxShadow: `0 0 10px ${color}50`,
-  transition: 'all 0.2s',
-});
-
-// --- Then define S using the helpers ---
-const S = {
-  glowText: glowText,
-  glowBorder: glowBorder,
-  baseCard: {
-    backgroundColor: N.CARD_BG,
-    borderRadius: '0.75rem',
-    padding: '1.5rem',
-    marginBottom: '1.5rem',
-    ...glowBorder(N.BORDER_DARK), // FIX: Use the standalone helper
-  },
-  baseButton: (isActive = false, color = N.CYAN) => ({
-    backgroundColor: isActive ? color + '20' : N.CARD_BG,
-    color: isActive ? color : N.TEXT_LIGHT,
-    padding: '0.6rem 1rem',
-    borderRadius: '0.5rem',
-    fontWeight: 'bold',
-    textDecoration: 'none',
-    transition: 'all 0.2s',
-    cursor: 'pointer',
-    ...glowBorder(isActive ? color : N.BORDER_DARK),
-    ...glowText(isActive ? color : N.TEXT_LIGHT, isActive ? 10 : 0),
-  }),
-};
-
-// Placeholder for the Dare Activity Feed
-const ActivityFeed = () => {
-  const activities = [
-    { type: 'DARE', user: 'WatcherX', dare: 'Play with one hand.', amount: 5, color: N.YELLOW },
-    { type: 'FOLLOW', user: 'NewFanatic', color: N.CYAN },
-    { type: 'DONATE', user: 'BigSpender', amount: 50, color: N.MAGENTA },
-  ];
+// FIX: Define StreamCard (copied from DashboardPage.jsx to resolve dependency issue)
+const StreamCard = ({ stream }) => {
+    const [isHovered, setIsHovered] = useState(false);
   
-  const activityItemStyle = (color) => ({
-    padding: '0.5rem 0',
-    borderBottom: `1px solid ${N.BORDER_DARK}40`,
-    fontSize: '0.9rem',
-    display: 'flex',
-    justifyContent: 'space-between',
-  });
-
-  return (
-    <div style={{ ...S.baseCard, maxHeight: '400px', overflowY: 'auto' }}>
-      <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem', ...glowText(N.MAGENTA, 5) }}>
-        Live Feed
-      </h3>
-      {activities.map((act, index) => (
-        <div key={index} style={activityItemStyle(act.color)}>
-          {act.type === 'DARE' && (
-            <p style={{ ...glowText(act.color, 3) }}>
-              @{act.user} dared you: "{act.dare}"
-            </p>
-          )}
-          {act.type === 'FOLLOW' && (
-            <p style={{ ...glowText(act.color, 3) }}>
-              @{act.user} just followed!
-            </p>
-          )}
-          {act.type === 'DONATE' && (
-            <p style={{ ...glowText(act.color, 3) }}>
-              @{act.user} donated!
-            </p>
-          )}
-          <span style={S.glowText(act.color, 5)}>
-            {act.amount ? `$${act.amount.toFixed(2)}` : act.type}
-          </span>
+    const cardStyles = {
+      background: 'linear-gradient(135deg, rgba(26, 26, 26, 0.9) 0%, rgba(40, 0, 60, 0.9) 100%)',
+      borderRadius: '16px',
+      overflow: 'hidden',
+      border: `2px solid ${isHovered ? stream.color : 'rgba(255, 255, 255, 0.1)'}`,
+      boxShadow: isHovered 
+        ? `0 10px 40px ${stream.color}60, inset 0 0 20px ${stream.color}20`
+        : '0 5px 20px rgba(0, 0, 0, 0.5)',
+      transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+      transform: isHovered ? 'translateY(-10px) scale(1.02)' : 'translateY(0) scale(1)',
+      cursor: 'pointer',
+      position: 'relative',
+    };
+  
+    const thumbnailStyles = {
+      height: '180px',
+      background: `linear-gradient(135deg, ${stream.color}40 0%, ${stream.color}10 100%)`,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: '3rem',
+      fontWeight: 'bold',
+      color: stream.color,
+      textShadow: `0 0 30px ${stream.color}`,
+      position: 'relative',
+      overflow: 'hidden',
+    };
+  
+    return (
+      <div 
+        style={cardStyles}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        {/* Thumbnail */}
+        <div style={thumbnailStyles}>
+          {/* Animated background */}
+          <div style={{
+            position: 'absolute',
+            width: '200%',
+            height: '200%',
+            background: `radial-gradient(circle, ${stream.color}20 0%, transparent 70%)`,
+            animation: 'rotate 8s linear infinite',
+          }} />
+          
+          {/* LIVE Badge */}
+          <div style={{
+            position: 'absolute',
+            top: '1rem',
+            left: '1rem',
+            padding: '0.5rem 1rem',
+            background: COLORS.neonMagenta,
+            borderRadius: '8px',
+            fontWeight: 'bold',
+            fontSize: '0.8rem',
+            color: 'white',
+            boxShadow: `0 0 20px ${COLORS.glowMagenta}`,
+          }}>
+            🔴 LIVE
+          </div>
+  
+          <span style={{ position: 'relative', zIndex: 2 }}>{stream.user[0]}</span>
         </div>
-      ))}
-      <p style={{ textAlign: 'center', color: N.TEXT_SECONDARY, marginTop: '1rem' }}>...</p>
-    </div>
-  );
-};
-
-const StreamPage = () => {
-  return (
-    <AppLayout>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.5rem' }}>
-        {/* Main Stream Area */}
-        <div style={{ 
-          backgroundColor: N.DARK_BG, 
-          padding: '1rem', 
-          borderRadius: '0.75rem', 
-          ...glowBorder(N.CYAN)
-        }}>
-          <h1 style={{ fontSize: '2.5rem', fontWeight: 'extrabold', marginBottom: '1rem', ...glowText(N.CYAN, 12) }}>
-            My Live Stream 🎥
-          </h1>
-          <p style={{ color: N.TEXT_SECONDARY, marginBottom: '1.5rem' }}>
-            Current Stream Key: <code style={{ color: N.YELLOW }}>darer_key_xxxx</code>
+  
+        {/* Stream Info */}
+        <div style={{ padding: '1.5rem' }}>
+          <h3 style={{
+            color: 'white',
+            marginBottom: '0.5rem',
+            fontSize: '1.1rem',
+            fontWeight: 'bold',
+          }}>
+            {stream.title}
+          </h3>
+          <p style={{
+            color: stream.color,
+            marginBottom: '0.5rem',
+            fontWeight: 'bold',
+          }}>
+            @{stream.user}
           </p>
-
-          <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, marginBottom: '1.5rem' }}>
-            <div style={{ 
-              position: 'absolute', 
-              top: 0, left: 0, width: '100%', height: '100%', 
-              backgroundColor: N.MAGENTA + '20',
-              display: 'flex', justifyContent: 'center', alignItems: 'center',
-              fontSize: '1.5rem', fontWeight: 'bold', color: N.MAGENTA,
-              ...glowText(N.MAGENTA, 15)
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            fontSize: '0.85rem',
+            color: '#999',
+          }}>
+            <span style={{
+              padding: '0.25rem 0.75rem',
+              background: `${stream.color}20`,
+              borderRadius: '6px',
+              border: `1px solid ${stream.color}40`,
             }}>
-              OBS/Streamlabs Video Player Placeholder
-            </div>
+              {stream.category}
+            </span>
+            <span style={{ fontWeight: 'bold', color: COLORS.neonYellow }}>
+              👁️ {stream.viewers}
+            </span>
           </div>
-          
-          <button 
-            style={{ 
-              ...S.baseButton(true, N.MAGENTA),
-              width: '100%', padding: '1rem', fontSize: '1.25rem', fontWeight: 'extrabold',
-              ...S.glowText(N.MAGENTA, 15), 
-              ...S.glowBorder(N.MAGENTA), 
-              backgroundColor: `${N.MAGENTA}10`,
-              marginTop: '0.5rem'
-            }}
-            onClick={() => alert("Simulating GO OFFLINE")}
-          >
-            GO OFFLINE
-          </button>
-        </div>
-        
-        {/* Side Panel (Activity Feed / Dare Submission) - Rendered below main area for mobile/simple grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.5rem' }}>
-          
-          {/* Dare Submission Card (Watcher's View) */}
-          <div style={S.baseCard}>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', ...glowText(N.CYAN, 8) }}>
-              Submit a Dare
-            </h2>
-            <textarea 
-              placeholder="What dare should the streamer do? (e.g., Say 'I love chips' 10 times)"
-              style={{ 
-                width: '100%', height: '80px', padding: '0.75rem', borderRadius: '0.5rem', 
-                backgroundColor: N.DARK_BG, border: `1px solid ${N.BORDER_DARK}`,
-                color: N.TEXT_LIGHT, fontSize: '1rem', marginBottom: '1rem',
-              }}
-            />
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <input 
-                type="number" 
-                placeholder="Amount ($)" 
-                defaultValue="5"
-                style={{ 
-                  width: '30%', padding: '0.75rem', borderRadius: '0.5rem', 
-                  backgroundColor: N.DARK_BG, border: `1px solid ${N.BORDER_DARK}`,
-                  color: N.YELLOW, fontSize: '1rem',
-                }}
-              />
-              <button 
-                style={{ 
-                  ...S.baseButton(true, N.MAGENTA), 
-                  padding: '0.75rem 1.5rem', 
-                  fontSize: '1rem'
-                }}
-                onClick={() => alert('Dare submitted for approval!')}
-              >
-                DARE NOW
-              </button>
-            </div>
-          </div>
-
-          <ActivityFeed />
         </div>
       </div>
-    </AppLayout>
+    );
+  };
+
+
+const StreamsPage = () => { 
+  const [filter, setFilter] = useState('all');
+  const categories = ['all', 'FPS', 'IRL', 'Horror', 'Chat', 'Retro'];
+  
+  // FIX: Define streams data locally
+  const streams = [
+    { user: 'CyberPlayerX', title: 'Epic Dare: Beat this level blindfolded!', viewers: '5.2K', category: 'FPS', color: COLORS.neonCyan },
+    { user: 'DareMaster_47', title: 'Singing bad 80s songs for $100 dares', viewers: '1.8K', category: 'IRL', color: COLORS.neonMagenta },
+    { user: 'CodeName_Yellow', title: 'Horror Games - All jump scares!', viewers: '850', category: 'Horror', color: COLORS.neonYellow },
+    { user: 'StreamQueen', title: 'Chill stream - Dare me to do silly things!', viewers: '3.1K', category: 'Chat', color: COLORS.neonPurple },
+    { user: 'SynthWaveGamer', title: 'Retro Games Dare Night', viewers: '420', category: 'Retro', color: COLORS.neonCyan },
+    { user: 'TheChaosKing', title: 'Eating gross stuff for $50 dares', viewers: '2.5K', category: 'IRL', color: COLORS.neonYellow },
+  ];
+
+
+  return (
+    <>
+      <div style={{ marginBottom: '3rem', textAlign: 'center' ,   height: '100vh' ,
+        marginTop: '45px' }}>
+        <h1 style={{
+          fontSize: '3.5rem',
+          fontWeight: 900,
+          background: `linear-gradient(135deg, ${COLORS.neonCyan} 0%, ${COLORS.neonMagenta} 100%)`,
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          marginBottom: '1rem',
+        }}>
+          🎥 ALL LIVE STREAMS
+        </h1>
+      </div>
+
+      <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+        {categories.map(cat => (
+          <button
+            key={cat}
+            onClick={() => setFilter(cat)}
+            style={{
+              padding: '0.75rem 1.5rem',
+              background: filter === cat ? `${COLORS.neonCyan}20` : 'rgba(26, 26, 26, 0.9)',
+              border: `2px solid ${filter === cat ? COLORS.neonCyan : 'rgba(255, 255, 255, 0.1)'}`,
+              borderRadius: '12px',
+              color: filter === cat ? COLORS.neonCyan : '#999',
+              fontSize: '1rem',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              transition: 'all 0.3s',
+              textTransform: 'uppercase',
+              boxShadow: filter === cat ? `0 0 20px ${COLORS.neonCyan}40` : 'none',
+            }}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+        gap: '2rem',
+      }}>
+        {streams
+          .filter(s => filter === 'all' || s.category === filter)
+          .map((stream, i) => (
+            // FIX: Use the local StreamCard definition
+            <StreamCard key={i} stream={stream} /> 
+          ))}
+      </div>
+    </>
   );
 };
 
-export default StreamPage;
+export default StreamsPage

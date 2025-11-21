@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import AppLayout from '../components/AppLayout';
 
 const UserOnboardingPage = () => {
   const navigate = useNavigate();
@@ -48,7 +47,7 @@ const UserOnboardingPage = () => {
   };
 
   return (
-    <AppLayout>
+    <>
       <div style={contentContainerStyle}>
         <h1 style={{ fontSize: '2.25rem', fontWeight: 'bold', marginBottom: '2rem', textAlign: 'center', ...S.glowText(N.MAGENTA, 12) }}>
           Welcome to Darer!
@@ -83,7 +82,7 @@ const UserOnboardingPage = () => {
           Skip for now (Go to Dashboard)
         </Link>
       </div>
-    </AppLayout>
+    </>
   );
 };
 

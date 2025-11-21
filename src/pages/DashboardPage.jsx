@@ -1,190 +1,281 @@
 // src/pages/DashboardPage.jsx
-import React from 'react';
+
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import AppLayout from '../components/AppLayout';
 
-// Shared styles/colors (N) copied from AppLayout.jsx for consistency
-const N = {
-  CYAN: '#00fff7',
-  MAGENTA: '#ff00ff',
-  YELLOW: '#fffc00',
-  DARK_BG: '#0a0a0a',
-  CARD_BG: '#1a1a1a',
-  TEXT_LIGHT: '#e5e7eb',
-  TEXT_SECONDARY: '#9ca3af',
-  BORDER_DARK: '#4b5563',
+// COLORS defined locally for component styling
+const COLORS = {
+  neonCyan: '#00fff7',
+  neonMagenta: '#ff00ff',
+  neonYellow: '#fffc00',
+  neonPurple: '#b800ff',
+  darkBg: '#0a0a0a',
+  cardBg: 'rgba(26, 26, 26, 0.8)',
+  glowCyan: 'rgba(0, 255, 247, 0.3)',
+  glowMagenta: 'rgba(255, 0, 255, 0.3)',
+  glowYellow: 'rgba(255, 252, 0, 0.3)',
 };
 
-const glowText = (color, intensity = 5) => ({
-  color: color,
-  textShadow: `0 0 ${intensity}px ${color}80`,
-  transition: 'all 0.2s',
-});
-const glowBorder = (color) => ({
-  border: `1px solid ${color}80`,
-  boxShadow: `0 0 10px ${color}50`,
-  transition: 'all 0.2s',
-});
+const StreamCard = ({ stream }) => {
+  const [isHovered, setIsHovered] = useState(false);
 
-const S = {
-  glowText: glowText,
-  glowBorder: glowBorder,
-  // --- FIX: Added the missing baseButton function ---
-  baseButton: (isActive = false, color = N.CYAN) => ({
-    backgroundColor: isActive ? color + '20' : N.CARD_BG,
-    color: isActive ? color : N.TEXT_LIGHT,
-    padding: '0.6rem 1rem',
-    borderRadius: '0.5rem',
-    fontWeight: 'bold',
-    textDecoration: 'none',
-    transition: 'all 0.2s',
-    cursor: 'pointer',
-    ...glowBorder(isActive ? color : N.BORDER_DARK),
-    ...glowText(isActive ? color : N.TEXT_LIGHT, isActive ? 10 : 0),
-  }),
-  // Integrated baseCard into S for consistency
-  baseCard: {
-    backgroundColor: N.CARD_BG,
-    borderRadius: '0.75rem', 
-    padding: '1.5rem', 
-    marginBottom: '1.5rem', 
-    ...glowBorder(N.BORDER_DARK),
-  },
-};
-
-// --- New Live Stream Card Component ---
-const LiveStreamCard = ({ user, title, viewers, category, userColor }) => {
-  const color = userColor;
-  
-  const cardStyle = {
-    backgroundColor: N.CARD_BG,
-    borderRadius: '0.75rem',
+  const cardStyles = {
+    background: 'linear-gradient(135deg, rgba(26, 26, 26, 0.9) 0%, rgba(40, 0, 60, 0.9) 100%)',
+    borderRadius: '16px',
     overflow: 'hidden',
-    transition: 'all 0.3s ease',
+    border: `2px solid ${isHovered ? stream.color : 'rgba(255, 255, 255, 0.1)'}`,
+    boxShadow: isHovered 
+      ? `0 10px 40px ${stream.color}60, inset 0 0 20px ${stream.color}20`
+      : '0 5px 20px rgba(0, 0, 0, 0.5)',
+    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+    transform: isHovered ? 'translateY(-10px) scale(1.02)' : 'translateY(0) scale(1)',
     cursor: 'pointer',
-    ...glowBorder(N.BORDER_DARK),
-    '&:hover': {
-      ...glowBorder(color),
-      boxShadow: `0 0 20px ${color}50`,
-      transform: 'translateY(-5px)',
-    }
-  };
-  
-  const thumbnailStyle = {
     position: 'relative',
-    height: '150px',
-    background: `${color}20`,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    fontSize: '2rem',
-    fontWeight: 'bold',
-    ...glowText(color, 15),
   };
-  
-  const liveIndicatorStyle = {
-    position: 'absolute',
-    top: '10px',
-    left: '10px',
-    backgroundColor: N.MAGENTA,
-    color: N.TEXT_LIGHT,
-    padding: '0.25rem 0.5rem',
-    borderRadius: '0.25rem',
-    fontSize: '0.75rem',
+
+  const thumbnailStyles = {
+    height: '180px',
+    background: `linear-gradient(135deg, ${stream.color}40 0%, ${stream.color}10 100%)`,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '3rem',
     fontWeight: 'bold',
-    ...glowText(N.MAGENTA, 10),
+    color: stream.color,
+    textShadow: `0 0 30px ${stream.color}`,
+    position: 'relative',
+    overflow: 'hidden',
   };
 
   return (
-    <Link to={`/stream?user=${user}`} style={{ textDecoration: 'none' }}>
-      <div style={cardStyle}>
-        {/* Thumbnail Area */}
-        <div style={thumbnailStyle}>
-          <span style={liveIndicatorStyle}>LIVE</span>
-          {/* Placeholder for video frame */}
-          {user.substring(0, 1)}
-        </div>
+    <div 
+      style={cardStyles}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Thumbnail */}
+      <div style={thumbnailStyles}>
+        {/* Animated background */}
+        <div style={{
+          position: 'absolute',
+          width: '200%',
+          height: '200%',
+          background: `radial-gradient(circle, ${stream.color}20 0%, transparent 70%)`,
+          animation: 'rotate 8s linear infinite',
+        }} />
         
-        {/* Stream Info */}
-        <div style={{ padding: '1rem', textAlign: 'left' }}>
-          <p style={{ fontWeight: 'bold', marginBottom: '0.5rem', fontSize: '1.1rem', ...glowText(N.TEXT_LIGHT, 0) }}>
-            {title}
-          </p>
-          <p style={{ color: color, fontSize: '0.9rem', marginBottom: '0.25rem' }}>
-            @{user}
-          </p>
-          <div style={{ display: 'flex', justifyContent: 'space-between', color: N.TEXT_SECONDARY, fontSize: '0.8rem' }}>
-            <span>{category}</span>
-            <span>{viewers} viewers</span>
-          </div>
+        {/* LIVE Badge */}
+        <div style={{
+          position: 'absolute',
+          top: '1rem',
+          left: '1rem',
+          padding: '0.5rem 1rem',
+          background: COLORS.neonMagenta,
+          borderRadius: '8px',
+          fontWeight: 'bold',
+          fontSize: '0.8rem',
+          color: 'white',
+          boxShadow: `0 0 20px ${COLORS.glowMagenta}`,
+        }}>
+          🔴 LIVE
+        </div>
+
+        <span style={{ position: 'relative', zIndex: 2 }}>{stream.user[0]}</span>
+      </div>
+
+      {/* Stream Info */}
+      <div style={{ padding: '1.5rem' }}>
+        <h3 style={{
+          color: 'white',
+          marginBottom: '0.5rem',
+          fontSize: '1.1rem',
+          fontWeight: 'bold',
+        }}>
+          {stream.title}
+        </h3>
+        <p style={{
+          color: stream.color,
+          marginBottom: '0.5rem',
+          fontWeight: 'bold',
+        }}>
+          @{stream.user}
+        </p>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          fontSize: '0.85rem',
+          color: '#999',
+        }}>
+          <span style={{
+            padding: '0.25rem 0.75rem',
+            background: `${stream.color}20`,
+            borderRadius: '6px',
+            border: `1px solid ${stream.color}40`,
+          }}>
+            {stream.category}
+          </span>
+          <span style={{ fontWeight: 'bold', color: COLORS.neonYellow }}>
+            👁️ {stream.viewers}
+          </span>
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 
-const DashboardPage = () => {
-  const liveStreams = [
-    { user: 'CyberPlayerX', title: 'Epic Dare: Beat this level blindfolded!', viewers: '5.2K', category: 'FPS', color: N.CYAN },
-    { user: 'DareMaster_47', title: 'Just singing bad 80s songs for $100 dares.', viewers: '1.8K', category: 'IRL', color: N.MAGENTA },
-    { user: 'CodeName:Yellow', title: 'Playing Horror Games - Must accept all jump scares!', viewers: '850', category: 'Horror', color: N.YELLOW },
-    { user: 'StreamQueen', title: 'Chill stream & chat - Dare me to do silly things!', viewers: '3.1K', category: 'Just Chatting', color: N.MAGENTA },
-    { user: 'SynthWaveGamer', title: 'Retro Games Dare Night. Come and challenge me!', viewers: '420', category: 'Retro', color: N.CYAN },
-    { user: 'TheChaosKing', title: 'Currently eating something gross for a $50 dare.', viewers: '2.5K', category: 'IRL', color: N.YELLOW },
-  ];
-
-  const titleStyle = {
-    fontSize: '2.5rem', 
-    fontWeight: 'extrabold', 
-    marginBottom: '2rem', 
-    textAlign: 'center', 
-    ...glowText(N.YELLOW, 12)
-  };
+// Stats Card Component
+const StatsCard = ({ icon, label, value, color, change }) => {
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <AppLayout>
-      <h1 style={titleStyle}>
-        🔥 Live Streams Right Now
-      </h1>
-
-      {/* Live Stream Grid */}
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
-        gap: '1.5rem', 
-        marginBottom: '3rem' 
+    <div
+      style={{
+        background: `linear-gradient(135deg, ${color}10 0%, rgba(26, 26, 26, 0.9) 100%)`,
+        borderRadius: '16px',
+        padding: '2rem',
+        border: `2px solid ${isHovered ? color : 'rgba(255, 255, 255, 0.1)'}`,
+        boxShadow: isHovered ? `0 0 30px ${color}40` : '0 5px 20px rgba(0, 0, 0, 0.3)',
+        transition: 'all 0.3s ease',
+        transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+        cursor: 'pointer',
+      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>{icon}</div>
+      <div style={{ color: '#999', fontSize: '0.9rem', marginBottom: '0.5rem' }}>{label}</div>
+      <div style={{
+        fontSize: '2rem',
+        fontWeight: 'bold',
+        color: color,
+        textShadow: `0 0 20px ${color}80`,
       }}>
-        {liveStreams.map((stream, index) => (
-          <LiveStreamCard 
-            key={index}
-            user={stream.user} 
-            title={stream.title} 
-            viewers={stream.viewers} 
-            category={stream.category}
-            userColor={stream.color}
-          />
-        ))}
+        {value}
       </div>
-      
-      {/* Quick Links Section */}
-      <div style={{ ...S.baseCard, textAlign: 'center' }}>
-        <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', ...glowText(N.MAGENTA, 8) }}>
-          My Stats & Actions
-        </h2>
-        <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-          {/* S.baseButton is now available */}
-          <Link to="/stream" style={{...S.baseButton(false, N.CYAN), ...glowText(N.CYAN, 8), ...glowBorder(N.CYAN)}}>
-            Go Live Now 🎥
-          </Link>
-          <Link to="/dares" style={{...S.baseButton(false, N.MAGENTA), ...glowText(N.MAGENTA, 8), ...glowBorder(N.MAGENTA)}}>
-            My Active Dares 🎯
-          </Link>
-          <Link to="/Setting" style={{...S.baseButton(false, N.YELLOW), ...glowText(N.YELLOW, 8), ...glowBorder(N.YELLOW)}}>
-            Edit Profile ⚙️
-          </Link>
+      {change && (
+        <div style={{
+          marginTop: '0.5rem',
+          color: change > 0 ? COLORS.neonYellow : COLORS.neonMagenta,
+          fontSize: '0.85rem',
+        }}>
+          {change > 0 ? '↑' : '↓'} {Math.abs(change)}% this week
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Main Dashboard Component
+const DashboardPage = () => {
+  const streams = [
+    { user: 'CyberPlayerX', title: 'Epic Dare: Beat this level blindfolded!', viewers: '5.2K', category: 'FPS', color: COLORS.neonCyan },
+    { user: 'DareMaster_47', title: 'Singing bad 80s songs for $100 dares', viewers: '1.8K', category: 'IRL', color: COLORS.neonMagenta },
+    { user: 'CodeName_Yellow', title: 'Horror Games - All jump scares!', viewers: '850', category: 'Horror', color: COLORS.neonYellow },
+    { user: 'StreamQueen', title: 'Chill stream - Dare me to do silly things!', viewers: '3.1K', category: 'Chat', color: COLORS.neonPurple },
+    { user: 'SynthWaveGamer', title: 'Retro Games Dare Night', viewers: '420', category: 'Retro', color: COLORS.neonCyan },
+    { user: 'TheChaosKing', title: 'Eating gross stuff for $50 dares', viewers: '2.5K', category: 'IRL', color: COLORS.neonYellow },
+  ];
+
+  return (
+    <>
+      <div style={{
+        position: 'relative',
+        zIndex: 1,
+        height: '100vh' ,
+        marginTop: '45px'
+      }}>
+        {/* Hero Section */}
+        <div style={{
+          marginBottom: '3rem',
+          textAlign: 'center',
+        }}>
+          <h1 style={{
+            fontSize: '3.5rem',
+            fontWeight: 900,
+            background: `linear-gradient(135deg, ${COLORS.neonCyan} 0%, ${COLORS.neonMagenta} 50%, ${COLORS.neonYellow} 100%)`,
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textShadow: `0 0 60px ${COLORS.glowCyan}`,
+            marginBottom: '1rem',
+            letterSpacing: '2px',
+          }}>
+            🔥 LIVE STREAMS RIGHT NOW
+          </h1>
+          <p style={{
+            fontSize: '1.2rem',
+            color: '#999',
+            textTransform: 'uppercase',
+            letterSpacing: '3px',
+          }}>
+            Stream • Get Dared • Get Paid
+          </p>
+        </div>
+
+        {/* Stats Overview */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gap: '1.5rem',
+          marginBottom: '3rem',
+        }}>
+          <StatsCard 
+            icon="💰" 
+            label="Total Earnings" 
+            value="$2,847" 
+            color={COLORS.neonYellow}
+            change={15}
+          />
+          <StatsCard 
+            icon="🎯" 
+            label="Dares Completed" 
+            value="142" 
+            color={COLORS.neonMagenta}
+            change={8}
+          />
+          <StatsCard 
+            icon="👁️" 
+            label="Total Views" 
+            value="52.3K" 
+            color={COLORS.neonCyan}
+            change={23}
+          />
+          <StatsCard 
+            icon="⚡" 
+            label="Streak Days" 
+            value="27" 
+            color={COLORS.neonPurple}
+            change={-2}
+          />
+        </div>
+
+        {/* Live Streams Grid */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+          gap: '2rem',
+        }}>
+          {streams.map((stream, i) => (
+            <StreamCard key={i} stream={stream} />
+          ))}
         </div>
       </div>
-    </AppLayout>
+
+      <style>{`
+        @keyframes rotate {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        @keyframes backgroundShift {
+          0%, 100% { opacity: 0.15; }
+          50% { opacity: 0.25; }
+        }
+        @keyframes pulse {
+          0% { transform: scale(1); opacity: 1; }
+          50% { transform: scale(1.05); opacity: 0.8; }
+          100% { transform: scale(1); opacity: 1; }
+        }
+      `}</style>
+    </>
   );
 };
 
