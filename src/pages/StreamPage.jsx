@@ -141,7 +141,7 @@ const StreamsPage = () => {
 
   return (
     <>
-      <div style={{ marginBottom: '3rem', textAlign: 'center' ,   height: '100vh' ,
+      <div style={{ marginBottom: '3rem', textAlign: 'center' , 
         marginTop: '45px' }}>
         <h1 style={{
           fontSize: '3.5rem',
