@@ -1,7 +1,7 @@
 // src/components/AppLayout.jsx
 
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation, Outlet } from 'react-router-dom'; // FIX 1: Import Outlet
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Link, useLocation, Outlet } from 'react-router-dom';
 
 // Cyberpunk color palette matching landing page
 const COLORS = {
@@ -23,17 +23,31 @@ const MAIN_CONTENT_MARGIN_OPEN = '320px';
 const MAIN_CONTENT_MARGIN_COLLAPSED = '120px';
 
 // Animated Sidebar Component
-const AppLayout = () => { // FIX 2: Removed 'children' from props
+const AppLayout = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const toggleSidebar = () => setIsCollapsed(!isCollapsed);
+  const sidebarRef = useRef(null); // Ref to target the sidebar element
+  
+  const toggleSidebar = useCallback(() => {
+    setIsCollapsed(prev => !prev);
+  }, []);
   
   const location = useLocation(); 
   const [activeLink, setActiveLink] = useState(location.pathname); 
 
-  // Sync activeLink state whenever the route changes
+  // Effect to manually control the sidebar's width and main content margin
   useEffect(() => {
+    if (sidebarRef.current) {
+      // Manually set width based on state
+      sidebarRef.current.style.width = isCollapsed ? SIDEBAR_WIDTH_COLLAPSED : SIDEBAR_WIDTH_OPEN;
+    }
+    const mainContentEl = document.getElementById('main-content-wrapper');
+    if (mainContentEl) {
+      // Manually set margin based on state
+      mainContentEl.style.marginLeft = isCollapsed ? MAIN_CONTENT_MARGIN_COLLAPSED : MAIN_CONTENT_MARGIN_OPEN;
+    }
     setActiveLink(location.pathname);
-  }, [location.pathname]);
+  }, [isCollapsed, location.pathname]);
+
 
   const links = [
     { name: 'Dashboard', path: '/dashboard', icon: '🏠', color: COLORS.neonYellow },
@@ -49,7 +63,7 @@ const AppLayout = () => { // FIX 2: Removed 'children' from props
     top: 0,
     left: 0,
     height: '100vh',
-    width: isCollapsed ? SIDEBAR_WIDTH_COLLAPSED : SIDEBAR_WIDTH_OPEN, 
+    // Width is now controlled by the useEffect and ref
     background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(20, 0, 30, 0.95) 100%)',
     borderRight: `2px solid ${COLORS.neonCyan}`,
     boxShadow: `0 0 40px ${COLORS.glowCyan}, inset 0 0 40px rgba(0, 255, 247, 0.05)`,
@@ -116,7 +130,7 @@ const AppLayout = () => { // FIX 2: Removed 'children' from props
   };
 
   const mainContentStyles = {
-    marginLeft: isCollapsed ? MAIN_CONTENT_MARGIN_COLLAPSED : MAIN_CONTENT_MARGIN_OPEN,
+    // marginLeft is now controlled by the useEffect and document.getElementById
     padding: '3rem',
     transition: 'margin-left 0.4s ease',
    height : '100vh' , 
@@ -126,7 +140,8 @@ const AppLayout = () => { // FIX 2: Removed 'children' from props
 
   return (
     <>
-      <div style={sidebarStyles}>
+      {/* Sidebar with ref */}
+      <div style={sidebarStyles} ref={sidebarRef}>
         {/* Animated background particles */}
         <div style={{
           position: 'absolute',
@@ -220,9 +235,9 @@ const AppLayout = () => { // FIX 2: Removed 'children' from props
         `}</style>
       </div>
       
-      {/* Content Wrapper for pages (children) */}
-      <div style={mainContentStyles}>
-        <Outlet /> {/* FIX 3: Renders the child component (e.g., DashboardPage) */}
+      {/* Content Wrapper for pages (children) with ID */}
+      <div id="main-content-wrapper" style={mainContentStyles}>
+        <Outlet />
       </div>
     </>
   );
